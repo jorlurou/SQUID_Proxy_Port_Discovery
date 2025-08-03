@@ -53,11 +53,43 @@ puertos_comunes=(
     27017   # MongoDB
     50000   # SAP
 )
+#Valores por defecto de la ip y puerto del squid proxy y de la ip la cual va a ser escaneada a través del SQUID Proxy
+
+IpSquid=""
+Port=""
+IpToSCan=""
+while getopts ":i:s:p:" opt; do # getopts ":l:p:" opt define que esperamos opciones -l y -p, ambas requieren argumentos (por los : después de cada letra).
+  case $opt in 
+    i)
+      IpSquid="$OPTARG"
+      ;;
+
+    s)
+      IpToSCan="$OPTARG"
+      ;;
+
+    p)
+      Port="$OPTARG"
+      ;;
+    \?)
+      echo "Opción inválida: -$OPTARG" >&2
+      exit 1
+      ;;
+    :)
+      echo "La opción -$OPTARG requiere un argumento." >&2
+      exit 1
+      ;;
+  esac
+done
+ 
+  
+
 
 
 for puerto in "${puertos_comunes[@]}"; do
-  respuesta=$(curl http://127.0.0.1:$puerto --proxy http://192.168.1.36:3128 -i -s | head -n 1 | awk '{print $2}')
+  respuesta=$(curl http://$IpToSCan:$puerto --proxy http://$IpSquid:$Port -i -s | head -n 1 | awk '{print $2}')
  if [ $respuesta -ne 503 ];then
    echo -e "\n [+] Puerto abierto: $puerto"
  fi
 done
+
