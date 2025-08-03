@@ -1,6 +1,6 @@
 Simple SQUID Proxy Port Scanner
 
-Version: 1.0
+Version: 1.1 (This update adds the use of parameters to simplify the script's usage)
 
 Description: This bash script detects hidden ports behind a SQUID proxy.
 
